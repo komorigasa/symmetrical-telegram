@@ -1,0 +1,264 @@
+<%= render 'partial/navbar' %>
+
+<!-- ジャンボトロン -->
+<div class="jumbotron row-space-0" style="margin-top: -20px; background: none ;">
+    
+  <!-- カルーセル -->
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">           
+    <!-- Indicators -->
+    <% if @photos.length > 1 %>
+      <ol class="carousel-indicators">
+        <% @photos.each do |photo| %>
+            <li data-target="#myCarousel" data-slide-to="<%= photo.id %>"></li>
+        <% end %>
+      </ol>             
+    <% end %>     
+
+    <div class="carousel-inner" role="listbox">
+      <% if @photos %>             
+        <% @photos.each do |photo| %>
+          <div class="item <%= 'active' if photo.id == @photos[0].id %>">          
+            <%= image_tag photo.image.url(),style: "height:420px; width:100%; overflow:hidden;" %>
+          </div>
+        <% end %>   
+      <% end %>
+    </div>
+      
+    <!-- Left and right controls -->
+    <% if @photos.length > 1%>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    <% end %>
+  </div>
+
+</div>
+
+<!-- サマリー -->
+<div class="container-fluid container-listing-show">
+    <div class="container">
+        <div class="listing-summary row-space-3 row-space-top-3">
+            <div class="row">
+                <div class="col-md-3 text-center row-space-2">
+                    <%= link_to user_path(@listing.user) do %>
+                        <% if @listing.user.image.present? %>
+										   <%= image_tag @listing.user.image,class:"img-circle profile-1" %>
+										<% end %>
+                    <% end %>
+                    <h5><%= @listing.user.name %></h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="listing-title" style="font-size:24px;">
+                        <%= @listing.listing_title %>
+                    </div>
+                    <div class="row row-space-top-3">
+                        <div class="col-sm-3 col-xs-3 text-center">
+                            <i class="fa fa-suitcase fa-3x"></i>
+                            <h5><%= @listing.travel_type %></h5>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 text-center">
+                            <i class="fa fa-globe fa-3x" aria-hidden="true"></i>
+                            <h5><%= @listing.travel_country %></h5>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 text-center">
+                            <i class="fa fa-plane fa-3x" aria-hidden="true"></i>
+                            <h5><%= @listing.departure_port %></h5>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 text-center">
+                            <i class="fa fa-plane fa-3x" aria-hidden="true"></i>
+                            <h5><%= @listing.arrival_port %></h5>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 予約フォーム -->
+                <div class="col-md-3">
+                    <div class="panel panel-default panel-show">
+                        <div class="panel-heading">
+                                <span style="font-size:16px;"><%= @listing.price %>円（1荷物(＝1Kgまで)の料金）</span>
+                        </div>
+                        
+                        <div class="panel-body panel-real">         
+                            <%= form_for [@listing, @listing.reservations.new] do |f| %>
+
+                                           
+                                <!-- 予約時に一緒におくるデータ-->
+                                <%= f.hidden_field :listing_id, value: @listing.id %>
+                                <%= f.hidden_field :price, value: @listing.price %>
+                                <%= f.hidden_field :total_price, id:'reservation_total_price' %>
+                                <%= f.hidden_field :commodity_prices, id:'reservation_commodity_prices' %>
+
+
+                                <div class="row row-space-2">
+
+                                    <div class="col-md-6">
+                                        <label>欲しい商品の価格</label>
+                                        <div class="input-group">
+                                          <%= f.text_field :commodity_prices, :class => 'form-control', placeholder: '例: 1000' %>
+                                        <span class="input-group-addon" id="basic-addon2">円</span>
+                                      </div>  
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <label>期限</label>
+                                        <%= f.text_field :by_date, :class => 'form-control', placeholder: '期限' %>
+                                    </div>
+                                </div>            
+
+                                <div class="actions text-center">
+                                    <%= f.submit "予約する", class: "btn btn-danger btn-wide" %>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- メインコンテント -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h3 class="row-space-3">この旅程について</h3>
+                <p><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %><%= @listing.listing_content %>
+                </p>
+        </div>
+
+        <div class="col-md-3">
+            
+        </div>
+    </div>  
+
+
+    <!-- レビュー    -->
+    <div class="row">
+        <div class="col-md-9">
+            <h3 class="row-space-3">レビュー</h3>
+            
+        </div>
+
+        <div class="col-md-3">
+        
+        </div>
+    </div>
+
+        <!-- google map    -->
+    <div class="row">
+        <div class="col-md-9">
+          <h3 class="row-space-3">旅行する場所</h3>
+
+        	<div id="map"></div>
+        </div>
+
+        <div class="col-md-3">
+        
+        </div>
+    </div>
+
+    <style>
+      #map {
+        height: 100%;
+        height: 450px;
+      }
+
+
+    </style>
+
+        <!-- 近くを旅行する人    -->
+    <div class="row">
+        <div class="col-md-9">
+						<h3 class="row-space-3">近くを旅行する人</h3>  
+						<% if @listing.nearbys(10).present? %>        
+	            <% for listing in @listing.nearbys(10) %>
+	                <div class="col-md-4">
+	                    <div class="panel panel-default">
+	                        <div class="panel-heading panel-listing text-center" style="padding: 0;">
+	                            <%= link_to(listing) do %>
+	                                <%= image_tag listing.photos[0].image.url(:medium)  if listing.photos.length > 0 %>
+	                            <% end %>
+	                        </div>
+
+	                        <div class="panel-body">
+	                            <div class="row">
+	                                <div class="col-md-8 col-xs-8">
+	                                    <%= link_to listing.listing_title, listing %><br>
+	                                </div>
+	                                <div class="col-md-3 col-xs-3">
+	                                	<% if listing.user.image.present? %>
+	                                    <%= image_tag listing.user.image,class:"img-circle profile-1" %> 
+	                                  <% end %>
+	                                </div>
+	                                <div class="price-card">
+	                                    <%= listing.price %> 円     
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            <% end %>
+	          <% end %>
+
+        </div>
+
+        <div class="col-md-3">
+        
+        </div>
+    </div>
+
+</div>
+
+        </div>
+
+        <div class="col-md-">
+        
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+  function initMap() {
+    // Create the map.
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: {lat: <%= @listing.latitude %>, lng: <%= @listing.longitude %> },
+      mapTypeId: 'terrain'
+    });
+
+    // Construct the circle for each value in citymap.
+    // Note: We scale the area of the circle based on the population.
+      // Add the circle for this city to the map.
+      var cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: {lat: <%= @listing.latitude %>, lng: <%= @listing.longitude %> },
+        radius: 3000
+      });
+    
+  }
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj2RGp7KyhB7jkTAqAO0jMusfBn7XnJDI&callback=initMap">
+</script>
+
+<script>
+$( function() {
+$( "#reservation_by_time" ).datepicker({minDate: '0d',
+
+});
+</script>

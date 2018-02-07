@@ -1,0 +1,86 @@
+<%= render 'partial/navbar' %>
+<div class="container">
+    <div class="col-md-3">
+        <!-- vertical-navbar -->
+        <%= render 'partial/verticalnavbar'%>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="text-center">
+                    <span style="font-size:24px;">住所の編集</span>
+                </div>
+            </div>
+
+            <div class="panel-body">          
+
+                <%= form_for @listing do |f| %>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>住所</label>
+                                <%= f.text_field :address, placeholder: "例: アメリカ合衆国ニューヨーク州", class: "form-control" %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <%= f.submit "更新", class: "btn btn-danger" %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+            <!-- google map    -->
+    <div class="row">
+        <div class="col-md-8">
+            <div id="map"></div>
+        </div>
+
+        <div class="col-md-4">
+        
+        </div>
+    </div>
+
+    <style>
+      #map {
+        width: 825px;
+        height: 400px;
+      }
+
+    </style>
+</div>
+
+
+
+<script>
+
+  function initMap() {
+    // Create the map.
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: {lat: <%= @listing.latitude %>, lng: <%= @listing.longitude %> },
+      mapTypeId: 'terrain'
+    });
+
+    // Construct the circle for each value in citymap.
+    // Note: We scale the area of the circle based on the population.
+      // Add the circle for this city to the map.
+      var cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: {lat: <%= @listing.latitude %>, lng: <%= @listing.longitude %> },
+        radius: 3000
+      });
+    
+  }
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj2RGp7KyhB7jkTAqAO0jMusfBn7XnJDI&callback=initMap">
+</script>
